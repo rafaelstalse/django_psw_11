@@ -1,0 +1,6 @@
+# dirs
+env-psw-11/*
+
+# files
+db.sqlite3
+links_uteis.txt
