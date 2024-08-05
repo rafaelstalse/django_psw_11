@@ -2,5 +2,6 @@
 env-psw-11/*
 
 # files
+*.pyc
 db.sqlite3
 links_uteis.txt
