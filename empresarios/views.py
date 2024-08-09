@@ -7,9 +7,10 @@ from django.core.exceptions import ValidationError
 from datetime import datetime, timedelta
 import re
 
+
 def cadastrar_empresa(request):
     if not request.user.is_authenticated:
-        messages.add_message(request, constants.ERROR, 'Você precisa estar logado para cadastrar uma empresa')
+        messages.add_message(request, constants.ERROR, 'Você precisa estar logado para cadastrar empresas')
         return redirect('/usuarios/logar')
     
     if request.method == "GET":
@@ -105,3 +106,20 @@ def cadastrar_empresa(request):
         
         messages.add_message(request, constants.SUCCESS, 'Empresa criada com sucesso')
         return redirect('/empresarios/cadastrar_empresa')
+    
+    
+def listar_empresas(request):
+    if not request.user.is_authenticated:
+        messages.add_message(request, constants.ERROR, 'Você precisa estar logado para listar empresas')
+        return redirect('/usuarios/logar')
+    
+    if request.method == "GET":
+        # realizar os filtros das empresas
+        empresas = Empresas.objects.filter(user=request.user)
+        return render(request, 'listar_empresas.html', {'empresas': empresas})
+    
+
+def empresa(request, id):
+    empresa = Empresas.objects.get(id=id)
+    if request.method == "GET":
+        return render(request, 'empresa.html', {'empresa': empresa})
