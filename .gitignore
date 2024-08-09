@@ -1,6 +1,6 @@
 # dirs
 env-psw-11/*
-
+*/migrations/*.py
 # files
 *.pyc
 db.sqlite3
