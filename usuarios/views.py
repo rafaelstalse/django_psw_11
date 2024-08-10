@@ -4,6 +4,8 @@ from django.contrib import messages
 from django.contrib.messages import constants
 from django.contrib import auth
 
+# verificar status do usuário logado em todas as views
+# utilizar o humanize para formatar as datas e números
 
 def home(request):
     return render(request, 'logar.html')

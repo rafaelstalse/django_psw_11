@@ -4,9 +4,12 @@ from django.contrib import messages
 from django.contrib.messages import constants
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
+from investidores.models import PropostaInvestimento
 from datetime import datetime, timedelta
 import re
 
+# verificar status do usuário logado em todas as views
+# utilizar o humanize para formatar as datas e números
 
 def cadastrar_empresa(request):
     if not request.user.is_authenticated:
@@ -131,7 +134,24 @@ def empresa(request, id):
     
     if request.method == "GET":
         documentos = Documento.objects.filter(empresa=empresa)
-        return render(request, 'empresa.html', {'empresa': empresa, 'documentos': documentos})
+        proposta_investimentos = PropostaInvestimento.objects.filter(empresa=empresa)
+        proposta_investimentos_enviada = proposta_investimentos.filter(status='PE')
+        
+        percentual_vendido = 0
+        for pi in proposta_investimentos:
+            if pi.status == 'PA':
+                percentual_vendido = percentual_vendido + pi.percentual
+        
+        total_captado = sum(proposta_investimentos.filter(status='PA').values_list('valor', flat=True))         
+        valuation_atual = (100 * float(total_captado)) / float(percentual_vendido) if percentual_vendido != 0 else 0
+        
+        return render(request, 'empresa.html', {'empresa': empresa, 
+                                                'documentos': documentos, 
+                                                'proposta_investimentos_enviada': proposta_investimentos_enviada, 
+                                                'percentual_vendido': int(percentual_vendido),
+                                                'total_captado': total_captado,
+                                                'valuation_atual': valuation_atual,
+                                                })
     
     
 def add_doc(request, id):
@@ -189,3 +209,18 @@ def add_metrica(request, id):
 
     messages.add_message(request, constants.SUCCESS, "Métrica cadastrada com sucesso")
     return redirect(f'/empresarios/empresa/{empresa.id}')
+
+
+def gerenciar_proposta(request, id):
+    acao = request.GET.get('acao')
+    pi = PropostaInvestimento.objects.get(id=id)
+
+    if acao == 'aceitar':
+        messages.add_message(request, constants.SUCCESS, 'Proposta aceita')
+        pi.status = 'PA'
+    elif acao == 'recusar':
+        messages.add_message(request, constants.ERROR, 'Proposta recusada')
+        pi.status = 'PR'
+
+    pi.save()
+    return redirect(f'/empresarios/empresa/{pi.empresa.id}')

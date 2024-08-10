@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
 from datetime import date
 
+
 class Empresas(models.Model):
     tempo_existencia_choices = (
         ('-6', 'Menos de 6 meses'),
@@ -50,7 +51,11 @@ class Empresas(models.Model):
     
     @property
     def valuation(self):
-        return f'{(100 * self.valor) / self.percentual_equity:.2f}'
+        return float(f'{(100 * self.valor) / self.percentual_equity:.2f}')
+    
+    class Meta:
+        verbose_name = 'Empresa'
+        verbose_name_plural = 'Empresas'
     
     
 class Documento(models.Model):
@@ -61,6 +66,10 @@ class Documento(models.Model):
     def __str__(self):
         return self.titulo
     
+    class Meta:
+        verbose_name = 'Documento'
+        verbose_name_plural = 'Documentos'
+    
     
 class Metricas(models.Model):
     empresa = models.ForeignKey(Empresas, on_delete=models.DO_NOTHING)
@@ -69,3 +78,7 @@ class Metricas(models.Model):
 
     def __str__(self):
         return self.titulo
+    
+    class Meta:
+        verbose_name = 'Metrica'
+        verbose_name_plural = 'Metricas'
