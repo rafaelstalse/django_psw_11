@@ -8,8 +8,6 @@ from investidores.models import PropostaInvestimento
 from datetime import datetime, timedelta
 import re
 
-# verificar status do usuário logado em todas as views
-# utilizar o humanize para formatar as datas e números
 
 def cadastrar_empresa(request):
     if not request.user.is_authenticated:
@@ -155,6 +153,10 @@ def empresa(request, id):
     
     
 def add_doc(request, id):
+    if not request.user.is_authenticated:
+        messages.add_message(request, constants.ERROR, 'Você precisa estar logado para adicionar documentos')
+        return redirect('/usuarios/logar')
+    
     empresa = Empresas.objects.get(id=id)
     titulo = request.POST.get('titulo')
     arquivo = request.FILES.get('arquivo')
@@ -184,6 +186,10 @@ def add_doc(request, id):
 
 
 def excluir_dc(request, id):
+    if not request.user.is_authenticated:
+        messages.add_message(request, constants.ERROR, 'Você precisa estar logado para remover documentos')
+        return redirect('/usuarios/logar')
+    
     documento = Documento.objects.get(id=id)
     
     if documento.empresa.user != request.user:
@@ -196,6 +202,10 @@ def excluir_dc(request, id):
 
 
 def add_metrica(request, id):
+    if not request.user.is_authenticated:
+        messages.add_message(request, constants.ERROR, 'Você precisa estar logado para adicionar métricas')
+        return redirect('/usuarios/logar')
+    
     empresa = Empresas.objects.get(id=id)
     titulo = request.POST.get('titulo')
     valor = request.POST.get('valor')
@@ -212,6 +222,10 @@ def add_metrica(request, id):
 
 
 def gerenciar_proposta(request, id):
+    if not request.user.is_authenticated:
+        messages.add_message(request, constants.ERROR, 'Você precisa estar logado para gerenciar propostas')
+        return redirect('/usuarios/logar')
+    
     acao = request.GET.get('acao')
     pi = PropostaInvestimento.objects.get(id=id)
 

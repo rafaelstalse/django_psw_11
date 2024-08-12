@@ -1,12 +1,10 @@
 from django.shortcuts import render, redirect
-from empresarios.models import Empresas, Documento
+from empresarios.models import Empresas, Documento, Metricas
 from django.contrib import messages
 from django.contrib.messages import constants
 from .models import PropostaInvestimento
 from django.http import Http404
 
-# verificar status do usuário logado em todas as views
-# utilizar o humanize para formatar as datas e números
 
 def sugestao(request):
     if not request.user.is_authenticated:
@@ -27,8 +25,6 @@ def sugestao(request):
         elif tipo == 'D':
             empresas = Empresas.objects.filter(tempo_existencia__in=['-6', '+6', '+1']).exclude(estagio="E")
         
-        # FAZER: criar um tipo generico 'G' onde esse tipo não atenda nem c ou d
-        
         empresas = empresas.filter(area__in=area)
         
         empresas_selecionadas = []
@@ -41,9 +37,12 @@ def sugestao(request):
 
 
 def ver_empresa(request, id):
+    if not request.user.is_authenticated:
+        messages.add_message(request, constants.ERROR, 'Você precisa estar logado para ver empresas')
+        return redirect('/usuarios/logar')
+    
     empresa = Empresas.objects.get(id=id)
-    # FAZER: istar metriccas dinamicamente
-    # metriccas = Metriccas.objects.filter(empresa=empresa)
+    metricas = Metricas.objects.filter(empresa=id)
     documentos = Documento.objects.filter(empresa=empresa)
     proposta_investimentos = PropostaInvestimento.objects.filter(empresa=empresa).filter(status='PA')
     
@@ -62,11 +61,16 @@ def ver_empresa(request, id):
                                                 'documentos': documentos,
                                                 'percentual_vendido': int(percentual_vendido),
                                                 'concretizado': concretizado,
-                                                'percentual_disponivel': percentual_disponivel
+                                                'percentual_disponivel': percentual_disponivel,
+                                                'metricas': metricas
                                                 })
 
 
 def realizar_proposta(request, id):
+    if not request.user.is_authenticated:
+        messages.add_message(request, constants.ERROR, 'Você precisa estar logado para realizar propostas')
+        return redirect('/usuarios/logar')
+    
     valor = request.POST.get('valor')
     percentual = request.POST.get('percentual')
     empresa = Empresas.objects.get(id=id)
@@ -102,6 +106,10 @@ def realizar_proposta(request, id):
 
 
 def assinar_contrato(request, id):
+    if not request.user.is_authenticated:
+        messages.add_message(request, constants.ERROR, 'Você precisa estar logado para assinar contratos')
+        return redirect('/usuarios/logar')
+    
     pi = PropostaInvestimento.objects.get(id=id)
     if pi.status != "AS":
         raise Http404()

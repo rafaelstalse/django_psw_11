@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load humanize %}
 {% block 'head' %}
 
 	<link rel="stylesheet" href="{% static 'empresarios/css/listar_empresas.css' %}">
@@ -20,7 +21,6 @@
                         {% for message in messages %}
                             <section class="alert {{message.tags}}">
                                 {{message}}
-            
                             </section>
                         {% endfor %}
                     {% endif %}
@@ -30,8 +30,8 @@
                     <div class="col-md">
                         <h3>{{empresa.nome}}</h3>
                         <span class="badge bg-primary">{{empresa.get_area_display}}</span>
+                        <span class="badge bg-warning">{{empresa.publico_alvo}}</span>
                     </div>
-                    
                 </div>
                 <br><br>
                 <div class="progress" wtyle="80%">
@@ -48,36 +48,28 @@
                 <p>{{empresa.descricao}}</p>
                 <div class="col-md">
                     <h5>Valuation esperado</h5>
-                    <span class="sub-fonte">Esperado: {{empresa.valuation}}</span>
+                    <span class="sub-fonte">Esperado: R$ {{empresa.valuation|floatformat:0|intcomma}}</span>
                     <br>
                     <br>
                     <h5>Percentual</h5>
-                    <span class="sub-fonte">Total a venda: {{empresa.percentual_equity}}%</span>
+                    <span class="sub-fonte">Total a venda: {{empresa.percentual_equity|floatformat:0|intcomma}}%</span>
                     <br>
-                    <span class="sub-fonte">Disponivel à compra: {{percentual_disponivel}}%</span>
+                    <span class="sub-fonte">Disponivel à compra: {{percentual_disponivel|floatformat:0|intcomma}}%</span>
                 </div>
                 <br>
-                <span class="badge bg-warning">{{empresa.publico_alvo}}</span>
-                <br><br>
-                <h4 style="color: #92D5EB">Indicadores |</h4>
+                <h4 style="color: #92D5EB">Indicadores</h4>
                 
                 <div class="row">
-                    <div class="col-md-3" >
+                    {% for metrica in metricas %}
+                    <div class="col-md-3">
                         <div class="dark-color" style="padding: 20px; text-align: center;">
-                            <h5>CAC</h5>
-                            <h6>R$ 200</h6>
+                            <h5>{{ metrica.titulo }}</h5>
+                            <h6>R$ {{ metrica.valor|floatformat:0|intcomma}}</h6>
                         </div>
                     </div>
-                    <div class="col-md-3" >
-                        <div class="dark-color" style="padding: 20px; text-align: center;">
-                            <h5>CAC</h5>
-                            <h6>R$ 200</h6>
-                        </div>
-                    </div>
-                    
-                  
-                </div>
-
+                    {% endfor %}
+                </div>                
+                
                 <hr>
                 <div class="row">
                     <h4>Faça sua proposta</h4>

@@ -14,10 +14,8 @@ import os
 from pathlib import Path
 from django.contrib.messages import constants
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -27,12 +25,9 @@ SECRET_KEY = 'django-insecure-d&ltqtxbl5$4s-u7gk(2a86k-+4i$na=f_1bia-ed^$wj!ai7@
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 ALLOWED_HOSTS = []
 
-
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -42,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'usuarios',
     'empresarios',
-    'investidores'
+    'investidores',
+    'django.contrib.humanize'
 ]
 
 MIDDLEWARE = [
@@ -75,7 +71,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -85,7 +80,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -105,18 +99,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
 LANGUAGE_CODE = 'pt-br'
-
 TIME_ZONE = 'America/Sao_Paulo'
-
 USE_I18N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -133,6 +122,7 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# gerenciamento de mensagens
 MESSAGE_TAGS = {
     constants.DEBUG: 'alert-primary',
     constants.ERROR: 'alert-danger',

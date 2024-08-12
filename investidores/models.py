@@ -2,7 +2,6 @@ from django.db import models
 from empresarios.models import Empresas
 from django.contrib.auth.models import User
 
-
 class PropostaInvestimento(models.Model):
     status_choices = (
         ('AS', 'Aguardando assinatura'),

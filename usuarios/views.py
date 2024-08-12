@@ -3,9 +3,8 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.messages import constants
 from django.contrib import auth
+from django.contrib.auth import logout
 
-# verificar status do usuário logado em todas as views
-# utilizar o humanize para formatar as datas e números
 
 def home(request):
     return render(request, 'logar.html')
@@ -59,3 +58,8 @@ def logar(request):
 
         messages.add_message(request, constants.ERROR, 'Usuario ou senha inválidos')
         return redirect('/usuarios/logar')
+    
+
+def custom_logout(request):
+    logout(request)
+    return redirect('/')

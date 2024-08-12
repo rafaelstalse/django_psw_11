@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
 from datetime import date
 
-
 class Empresas(models.Model):
     tempo_existencia_choices = (
         ('-6', 'Menos de 6 meses'),
@@ -57,7 +56,7 @@ class Empresas(models.Model):
         verbose_name = 'Empresa'
         verbose_name_plural = 'Empresas'
     
-    
+
 class Documento(models.Model):
     empresa = models.ForeignKey(Empresas, on_delete=models.DO_NOTHING)
     titulo = models.CharField(max_length=30)
